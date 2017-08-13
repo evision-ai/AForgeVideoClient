@@ -1,4 +1,14 @@
-﻿using System;
+﻿// Modified AForge Controls Library
+// by EVision, 2017/08/13
+//
+// ===============================
+// AForge Controls Library in AForge.NET framework
+// http://www.aforgenet.com/framework/
+//
+// Copyright © AForge.NET, 2005-2012
+// contacts@aforgenet.com
+//
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
