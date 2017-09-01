@@ -509,11 +509,12 @@ namespace EVision.Video
             }
             if (videoSource == null)
             {
-                SolidBrush drawBrush = new SolidBrush(this.ForeColor);
-                g.Clear(this.BackColor);
-                g.DrawString((lastMessage == null) ? "Not connected" : lastMessage,
-                    this.Font, drawBrush, new PointF(5, 5));
-                drawBrush.Dispose();
+                using (SolidBrush drawBrush = new SolidBrush(this.ForeColor))
+                {
+                    g.Clear(this.BackColor);
+                    g.DrawString((lastMessage == null) ? "Not connected" : lastMessage,
+                        this.Font, drawBrush, new PointF(5, 5));
+                }
                 base.OnPaint(e);
                 return;
             }
@@ -562,12 +563,12 @@ namespace EVision.Video
             }
             else
             {
-                // create font and brush
-                SolidBrush drawBrush = new SolidBrush(this.ForeColor);
-                g.Clear(this.BackColor);
-                g.DrawString((lastMessage == null) ? "Connecting ..." : lastMessage,
-                    this.Font, drawBrush, new PointF(5, 5));
-                drawBrush.Dispose();
+                using (SolidBrush drawBrush = new SolidBrush(this.ForeColor))
+                {
+                    g.Clear(this.BackColor);
+                    g.DrawString((lastMessage == null) ? "Connecting ..." : lastMessage,
+                        this.Font, drawBrush, new PointF(5, 5));
+                }
             }
             base.OnPaint(e);
         }
