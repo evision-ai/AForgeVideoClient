@@ -255,6 +255,11 @@ namespace EVision.Video
             }
         }
 
+        protected Rectangle videoArea = new Rectangle();
+
+        [Browsable(false)]
+        public Rectangle VideoArea { get => videoArea; }
+
         /// <summary>
         /// Delegate to notify about new frame.
         /// </summary>
@@ -515,6 +520,8 @@ namespace EVision.Video
                     g.DrawString((lastMessage == null) ? "Not connected" : lastMessage,
                         this.Font, drawBrush, new PointF(5, 5));
                 }
+
+                videoArea = this.ClientRectangle;
                 base.OnPaint(e);
                 return;
             }
@@ -538,31 +545,36 @@ namespace EVision.Video
                 if (keepRatio)
                 {
                     double ratio = (double)frame.Width / frame.Height;
-                    Rectangle newRect = rect;
+                    int w = rect.Width - b, h = rect.Height - b;
 
-                    if (rect.Width < rect.Height * ratio)
+                    if (w < h * ratio)
                     {
-                        newRect.Height = (int)(rect.Width / ratio);
+                        h = (int)(w / ratio);
                     }
                     else
                     {
-                        newRect.Width = (int)(rect.Height * ratio);
+                        w = (int)(h * ratio);
                     }
 
-                    newRect.X = (rect.Width - newRect.Width) / 2;
-                    newRect.Y = (rect.Height - newRect.Height) / 2;
-
-                    g.DrawImage(frame, newRect.X + a, newRect.Y + a, newRect.Width - b, newRect.Height - b);
+                    videoArea.X = (rect.Width - w) / 2 + a;
+                    videoArea.Y = (rect.Height - h) / 2 + a;
+                    videoArea.Width = w;
+                    videoArea.Height = h;
                 }
                 else
                 {
-                    // draw current frame
-                    g.DrawImage(frame, rect.X + a, rect.Y + a, rect.Width - b, rect.Height - b);
+                    videoArea.X = rect.X + a;
+                    videoArea.Y = rect.Y + a;
+                    videoArea.Width = rect.Width - b;
+                    videoArea.Height = rect.Height - b;
                 }
+                // draw current frame
+                g.DrawImage(frame, videoArea);
                 frame.Dispose();
             }
             else
             {
+                videoArea = this.ClientRectangle;
                 using (SolidBrush drawBrush = new SolidBrush(this.ForeColor))
                 {
                     g.Clear(this.BackColor);
