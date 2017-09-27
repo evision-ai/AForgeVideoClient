@@ -112,12 +112,13 @@ namespace EVision.Video
                 UpdatePosition( );
             }
         }
-        
+
         /// <summary>
         /// Gets or sets whether the player should keep the aspect ratio of the images being shown.
         /// </summary>
         /// 
-        [DefaultValue( false )]
+        [Category("Appearance")]
+        [DefaultValue( true )]
         public bool KeepAspectRatio
         {
             get { return keepRatio; }
@@ -134,6 +135,7 @@ namespace EVision.Video
         /// 
         /// <remarks><para>Specifies color of the border drawn around video frame.</para></remarks>
         /// 
+        [Category("Appearance")]
         [DefaultValue( typeof( Color ), "Black" )]
         public Color BorderColor
         {
@@ -145,6 +147,7 @@ namespace EVision.Video
             }
         }
 
+        [Category("Appearance")]
         [DefaultValue(true)]
         public bool HasBorder
         {
@@ -160,12 +163,14 @@ namespace EVision.Video
         [DefaultValue(CompositingMode.SourceCopy)]
         public CompositingMode CompositingMode { get; set; }
 
-        [DefaultValue(InterpolationMode.Default)]
+        [DefaultValue(InterpolationMode.NearestNeighbor)]
         public InterpolationMode InterpolationMode { get; set; }
 
-        [DefaultValue(SmoothingMode.Default)]
+        [DefaultValue(SmoothingMode.None)]
         public SmoothingMode SmoothingMode { get; set; }
 
+        [DefaultValue(ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.DoubleBuffer)]
         public ControlStyles ControlStyles
         {
             get { return controlStyles; }
@@ -298,11 +303,22 @@ namespace EVision.Video
         /// </summary>
         public VideoPlayer()
         {
+            this.HasBorder = true;
+            this.KeepAspectRatio = true;
+
+            this.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+            this.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            this.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+
+            this.videoSource = null;
+
+            this.ForeColor = DefaultForeColor;
+
             InitializeComponent( );
 
             // update control style
-            this.ControlStyles = ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw |
-                ControlStyles.DoubleBuffer | ControlStyles.UserPaint;
+            this.ControlStyles = ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.DoubleBuffer;
         }
 
         public void UpdateBorderPen(Pen pen = null)
@@ -504,7 +520,7 @@ namespace EVision.Video
                 UpdatePosition( );
                 needSizeUpdate = false;
             }
-            
+
             Graphics  g = e.Graphics;
             Rectangle rect = this.ClientRectangle;
             if (borderPen != null)
@@ -514,11 +530,11 @@ namespace EVision.Video
             }
             if (videoSource == null)
             {
-                using (SolidBrush drawBrush = new SolidBrush(this.ForeColor))
+                using (SolidBrush drawBrush = new SolidBrush(Color.Black))
                 {
                     g.Clear(this.BackColor);
-                    g.DrawString((lastMessage == null) ? "Not connected" : lastMessage,
-                        this.Font, drawBrush, new PointF(5, 5));
+                    string curMessage = lastMessage;
+                    g.DrawString(string.IsNullOrEmpty(curMessage) ? "Not connected" : curMessage, Font ?? DefaultFont, drawBrush, new Point(5, 5));
                 }
 
                 videoArea = this.ClientRectangle;
@@ -527,7 +543,7 @@ namespace EVision.Video
             }
 
             Bitmap frame = null;
-            lock (sync)
+            lock ( sync )
             {
                 if ((currentFrame != null) && (lastMessage == null))
                 {
@@ -578,8 +594,8 @@ namespace EVision.Video
                 using (SolidBrush drawBrush = new SolidBrush(this.ForeColor))
                 {
                     g.Clear(this.BackColor);
-                    g.DrawString((lastMessage == null) ? "Connecting ..." : lastMessage,
-                        this.Font, drawBrush, new PointF(5, 5));
+                    string curMessage = lastMessage;
+                    g.DrawString(string.IsNullOrEmpty(curMessage) ? "Connecting ..." : curMessage, Font ?? DefaultFont, drawBrush, new Point(5, 5));
                 }
             }
             base.OnPaint(e);
