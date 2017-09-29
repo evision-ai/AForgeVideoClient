@@ -163,7 +163,7 @@ namespace EVision.Video
         [DefaultValue(CompositingMode.SourceCopy)]
         public CompositingMode CompositingMode { get; set; }
 
-        [DefaultValue(InterpolationMode.NearestNeighbor)]
+        [DefaultValue(InterpolationMode.Low)]
         public InterpolationMode InterpolationMode { get; set; }
 
         [DefaultValue(SmoothingMode.None)]
@@ -307,7 +307,7 @@ namespace EVision.Video
             this.KeepAspectRatio = true;
 
             this.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
-            this.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            this.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Low;
             this.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
 
             this.videoSource = null;
