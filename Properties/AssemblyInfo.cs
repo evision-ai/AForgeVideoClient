@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的常规信息通过以下
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("AForge.Controls.VideoPlayer")]
-[assembly: AssemblyDescription("An Open-Sourced Video Client Library, modified from AForge's")]
+[assembly: AssemblyTitle("modified AForge.Controls.VideoPlayer")]
+[assembly: AssemblyDescription("An Open-Sourced Video Client Library, modified by Beijing EVision Company from AForge's")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
+[assembly: AssemblyProduct("AForgeVideoPlayer")]
 [assembly: AssemblyCopyright("Copyright © AForge 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
