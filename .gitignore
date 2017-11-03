@@ -146,3 +146,4 @@ dbg-p/
 *.pyc
 __pycache__/
 
+*.pfx
