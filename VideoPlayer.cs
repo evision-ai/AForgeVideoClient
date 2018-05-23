@@ -471,6 +471,12 @@ namespace EVision.Video
             }
         }
 
+        protected bool crop90 = false;
+        public void setCrop90(bool enable)
+        {
+            crop90 = enable;
+        }
+
         /// <summary>
         /// Get clone of current video frame displayed by the control.
         /// </summary>
@@ -558,11 +564,15 @@ namespace EVision.Video
                 g.CompositingMode = CompositingMode;
                 g.InterpolationMode = InterpolationMode;
                 g.SmoothingMode = SmoothingMode;
-                if (keepRatio)
+                if (keepRatio || crop90)
                 {
                     double ratio = (double)frame.Width / frame.Height;
+                    if (crop90)
+                    {
+                        ratio = 1;
+                        a = b = 0;
+                    }
                     int w = rect.Width - b, h = rect.Height - b;
-
                     if (w < h * ratio)
                     {
                         h = (int)(w / ratio);
@@ -629,6 +639,18 @@ namespace EVision.Video
                 if ( NewFrame != null )
                 {
                     NewFrame( this, ref newFrame );
+                }
+                if (crop90)
+                {
+                    Bitmap bmp2 = new Bitmap(480, 480);
+                    using (Graphics g = Graphics.FromImage(bmp2))
+                    {
+                        g.TranslateTransform(0, -160);
+                        g.RotateTransform(90);
+                        g.DrawImage(newFrame, 0, -480);
+                    }
+                    newFrame.Dispose();
+                    newFrame = bmp2;
                 }
 
                 // now update current frame of the control
