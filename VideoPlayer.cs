@@ -471,10 +471,10 @@ namespace EVision.Video
             }
         }
 
-        protected bool crop90 = false;
-        public void setCrop90(bool enable)
+        protected int rotation = 0;
+        public void setRotation(int rotate)
         {
-            crop90 = enable;
+            rotation = rotate;
         }
 
         /// <summary>
@@ -564,10 +564,10 @@ namespace EVision.Video
                 g.CompositingMode = CompositingMode;
                 g.InterpolationMode = InterpolationMode;
                 g.SmoothingMode = SmoothingMode;
-                if (keepRatio || crop90)
+                if (keepRatio || rotation != 0)
                 {
                     double ratio = (double)frame.Width / frame.Height;
-                    if (crop90)
+                    if (rotation != 0)
                     {
                         ratio = 1;
                         a = b = 0;
@@ -640,14 +640,23 @@ namespace EVision.Video
                 {
                     NewFrame( this, ref newFrame );
                 }
-                if (crop90)
+                if (rotation != 0)
                 {
                     Bitmap bmp2 = new Bitmap(480, 480);
                     using (Graphics g = Graphics.FromImage(bmp2))
                     {
-                        g.TranslateTransform(0, -160);
-                        g.RotateTransform(90);
-                        g.DrawImage(newFrame, 0, -480);
+                        if (rotation == 90)
+                        {
+                            g.TranslateTransform(0, -160);
+                            g.RotateTransform(90);
+                            g.DrawImage(newFrame, 0, -480);
+                        }
+                        else
+                        {
+                            g.TranslateTransform(0, 80);
+                            g.RotateTransform(-90);
+                            g.DrawImage(newFrame, -480, 0);
+                        }
                     }
                     newFrame.Dispose();
                     newFrame = bmp2;
